@@ -2,12 +2,12 @@ from enum import Enum
 from socketserver import BaseRequestHandler
 
 # logger
-from prog.common import get_logger
+from common import get_logger
+
 logger = get_logger(__name__)
 
 
 class RequestHandler(BaseRequestHandler):
-
     class Response(Enum):
         Error = 'Error'
         Success = 'Success'
@@ -41,8 +41,6 @@ class RequestHandler(BaseRequestHandler):
         if data_type == 'TEST':
             self.send_response(RequestHandler.Response.Success)
             return
-
-
 
         # self.server.dispatcher.bot.send_message(ADMIN_ID, data)
 

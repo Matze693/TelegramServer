@@ -1,12 +1,11 @@
-from threading import Thread
 from socketserver import ThreadingTCPServer
-
-from prog.request_handler import RequestHandler
+from threading import Thread
 
 # logger
-from prog.common import get_logger
-logger = get_logger(__name__)
+from common import get_logger
+from request_handler import RequestHandler
 
+logger = get_logger(__name__)
 
 ADMIN_ID = '110086856'
 

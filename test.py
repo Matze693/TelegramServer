@@ -1,8 +1,8 @@
+import configparser
 import socket
 import unittest
-import configparser
 
-from prog.telegram_server import TelegramServer
+from telegram_server import TelegramServer
 
 
 class Tests(unittest.TestCase):

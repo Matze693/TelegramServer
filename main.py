@@ -1,9 +1,9 @@
-import signal
 import configparser
+import signal
 
-from prog.telegram_server import TelegramServer
+from common import get_logger
+from telegram_server import TelegramServer
 
-from prog.common import get_logger
 logger = get_logger(__name__)
 
 
