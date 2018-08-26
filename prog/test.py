@@ -1,11 +1,6 @@
 import socket
-import logging
 import unittest
 import configparser
-
-from prog import common
-
-common.LOGGING_LEVEL = logging.DEBUG
 
 from prog.telegram_server import TelegramServer
 
