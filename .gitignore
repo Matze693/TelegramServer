@@ -56,3 +56,15 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# PyCharm
+.idea
+
+# logging
+log
+
+# Apple
+.AppleDouble
+
+# Project
+bot.config
