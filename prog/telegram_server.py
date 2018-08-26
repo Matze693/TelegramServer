@@ -1,10 +1,10 @@
 from threading import Thread
 from telegram.ext import Updater
 
-from server import Server
+from prog.server import Server
 
 # logger
-from common import get_logger
+from prog.common import get_logger
 logger = get_logger(__name__)
 
 

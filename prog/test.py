@@ -3,10 +3,11 @@ import logging
 import unittest
 import configparser
 
-import common
+from prog import common
+
 common.LOGGING_LEVEL = logging.DEBUG
 
-from telegram_server import TelegramServer
+from prog.telegram_server import TelegramServer
 
 
 class Tests(unittest.TestCase):

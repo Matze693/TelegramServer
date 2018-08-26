@@ -1,10 +1,10 @@
 from threading import Thread
 from socketserver import ThreadingTCPServer
 
-from request_handler import RequestHandler
+from prog.request_handler import RequestHandler
 
 # logger
-from common import get_logger
+from prog.common import get_logger
 logger = get_logger(__name__)
 
 
