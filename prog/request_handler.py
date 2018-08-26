@@ -14,7 +14,9 @@ class RequestHandler(BaseRequestHandler):
 
     def handle(self):
         data = self.request.recv(1024).strip().decode('utf-8')
-        logger.debug('Client {} -> message: "{}"'.format(self.client_address, data))
+        logger.debug('Incoming message from client {}'.format(self.client_address))
+        logger.debug('<< "{}"'.format(data))
+
         # data = 'SenderName|Group|DataType|Message'
 
         # check response structure
@@ -22,24 +24,30 @@ class RequestHandler(BaseRequestHandler):
             self.send_response(RequestHandler.Response.Error, 'Invalid command structure')
             return
         sender_name, group, data_type, message = data.split('|', 3)
+        group = group.upper()
+        data_type = data_type.upper()
         # check sender_name
         if sender_name is "":
             self.send_response(RequestHandler.Response.Error, 'Empty sender name')
             return
         # check group
-        if group.upper() not in ['ADMINS']:
+        if group not in ['ADMINS']:
             self.send_response(RequestHandler.Response.Error, 'Invalid group')
             return
         # check data type
-        if data_type.upper() not in ['TEXT', 'NUMBER', 'TEST']:
+        if data_type not in ['TEXT', 'TEST']:
             self.send_response(RequestHandler.Response.Error, 'Invalid data type')
             return
+        if data_type == 'TEST':
+            self.send_response(RequestHandler.Response.Success)
+            return
 
-        self.send_response(RequestHandler.Response.Success)
+
 
         # self.server.dispatcher.bot.send_message(ADMIN_ID, data)
 
     def send_response(self, response, message=''):
         data = '{}|{}'.format(response.value, message)
-        logger.debug('Send to client {} -> message: "{}"'.format(self.client_address, data))
+        logger.debug('Send message to client {}'.format(self.client_address))
+        logger.debug('>> "{}"'.format(data))
         self.request.sendall(bytes(data, 'utf-8'))
