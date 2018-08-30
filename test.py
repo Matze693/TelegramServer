@@ -1,8 +1,49 @@
 import configparser
 import socket
 import unittest
+from threading import Thread
 
 from telegram_server import TelegramServer
+
+
+class ThreadTests(unittest.TestCase):
+    class TestThread(Thread):
+
+        def __init__(self):
+            Thread.__init__(self)
+            self.daemon = True
+            self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.client.connect(('127.0.0.1', 9999))
+            self.response = None
+            self.message = None
+
+        def run(self):
+            self.client.sendall(bytes('TestSender|Admins|Test|Message', 'utf-8'))
+            response, message = self.client.recv(4096).strip().decode('utf-8').split('|')
+            self.response = response
+            self.message = message
+
+    @classmethod
+    def setUpClass(cls):
+        bot_config = configparser.ConfigParser()
+        bot_config.read('bot.config')
+        cls.server = TelegramServer(token=bot_config['BOT']['TOKEN'])
+        cls.server.start()
+        cls.threads = list()
+        for i in range(1000):
+            cls.threads.append(ThreadTests.TestThread())
+
+    def test_run(self):
+        for thread in self.threads:
+            thread.start()
+        for thread in self.threads:
+            thread.join()
+        for thread in self.threads:
+            self.assertEqual('Success', thread.response)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.stop()
 
 
 class Tests(unittest.TestCase):
