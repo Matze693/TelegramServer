@@ -14,8 +14,8 @@ class RequestHandler(BaseRequestHandler):
 
     def handle(self):
         data = self.request.recv(1024).strip().decode('utf-8')
-        logger.debug('Incoming message from client {}'.format(self.client_address))
-        logger.debug('<< "{}"'.format(data))
+        logger.info('Incoming message from client {}'.format(self.client_address))
+        logger.info('<< "{}"'.format(data))
 
         # data = 'SenderName|Group|DataType|Message'
 
@@ -46,6 +46,6 @@ class RequestHandler(BaseRequestHandler):
 
     def send_response(self, response, message=''):
         data = '{}|{}'.format(response.value, message)
-        logger.debug('Send message to client {}'.format(self.client_address))
-        logger.debug('>> "{}"'.format(data))
+        logger.info('Send message to client {}'.format(self.client_address))
+        logger.info('>> "{}"'.format(data))
         self.request.sendall(bytes(data, 'utf-8'))
