@@ -8,6 +8,7 @@ logger = get_logger(__name__)
 
 
 class RequestHandler(BaseRequestHandler):
+
     class Response(Enum):
         Error = 'Error'
         Success = 'Success'
@@ -26,23 +27,26 @@ class RequestHandler(BaseRequestHandler):
         sender_name, group, data_type, message = data.split('|', 3)
         group = group.upper()
         data_type = data_type.upper()
+
         # check sender_name
-        if sender_name is "":
+        if sender_name is '':
             self.send_response(RequestHandler.Response.Error, 'Empty sender name')
             return
+
         # check group
         if group not in ['ADMINS']:
             self.send_response(RequestHandler.Response.Error, 'Invalid group')
             return
+
         # check data type
         if data_type not in ['TEXT', 'TEST']:
             self.send_response(RequestHandler.Response.Error, 'Invalid data type')
             return
+
+        # handle data types
         if data_type == 'TEST':
             self.send_response(RequestHandler.Response.Success)
             return
-
-        # self.server.dispatcher.bot.send_message(ADMIN_ID, data)
 
     def send_response(self, response, message=''):
         data = '{}|{}'.format(response.value, message)
