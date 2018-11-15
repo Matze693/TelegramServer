@@ -20,14 +20,15 @@ class RequestHandler(BaseRequestHandler):
         logger.info('Incoming message from client {}'.format(self.client_address))
         logger.info('<< "{}"'.format(data))
 
-        # data = 'SenderName|Group|DataType|Message'
+        # data = 'SenderName|Group|Level|DataType|Message'
 
         # check response structure
-        if data.count('|') < 3:
+        if data.count('|') < 4:
             self.send_response(RequestHandler.Response.Error, 'Invalid command structure')
             return
-        sender_name, group, data_type, message = data.split('|', 3)
+        sender_name, group, level, data_type, message = data.split('|', 4)
         group = group.upper()
+        level = level.upper()
         data_type = data_type.upper()
 
         # check sender_name
@@ -38,6 +39,11 @@ class RequestHandler(BaseRequestHandler):
         # check group
         if group not in ['ADMINS']:
             self.send_response(RequestHandler.Response.Error, 'Invalid group')
+            return
+
+        # check level
+        if level not in ['ERROR', 'WARNING', 'INFO']:
+            self.send_response(RequestHandler.Response.Error, 'Invalid level')
             return
 
         # check data type

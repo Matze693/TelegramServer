@@ -18,7 +18,7 @@ class ThreadTests(unittest.TestCase):
             self.message = None
 
         def run(self):
-            self.client.sendall(bytes('TestSender|Admins|Test|Message', 'utf-8'))
+            self.client.sendall(bytes('TestSender|Admins|Error|Test|Message', 'utf-8'))
             response, message = self.client.recv(4096).strip().decode('utf-8').split('|', 1)
             self.response = response
             self.message = message
@@ -67,27 +67,32 @@ class Tests(unittest.TestCase):
         self.client.connect(('127.0.0.1', 9999))
 
     def test_send_invalid_structure(self):
-        self.sendData('||||')
+        self.sendData('|')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Error', response)
 
     def test_send_invalid_sender_name(self):
-        self.sendData('|||')
+        self.sendData('||||')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Error', response)
 
     def test_send_invalid_group(self):
-        self.sendData('TestSender|Group|Text|Message')
+        self.sendData('TestSender|Group|Level|Text|Message')
+        response, message = self.receiveData().split('|', 1)
+        self.assertEqual('Error', response)
+
+    def test_send_invalid_level(self):
+        self.sendData('TestSender|Admins|Level|Text|Message')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Error', response)
 
     def test_send_invalid_data_type(self):
-        self.sendData('TestSender|Admins|DataType|Message')
+        self.sendData('TestSender|Admins|Error|DataType|Message')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Error', response)
 
     def test_send_valid_data(self):
-        self.sendData('TestSender|Admins|Test|Message|')
+        self.sendData('TestSender|Admins|Error|Test|Message|')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Success', response)
 
