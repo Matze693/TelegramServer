@@ -46,19 +46,19 @@ class RequestHandler(BaseRequestHandler):
             self.send_response(RequestHandler.Response.Error, 'Invalid level')
             return
 
-        # check data type
-        if data_type not in ['TEXT', 'TEST']:
-            self.send_response(RequestHandler.Response.Error, 'Invalid data type')
-            return
-
-        # handle data types
+        # data type for testing
         if data_type == 'TEST':
             self.send_response(RequestHandler.Response.Success)
             return
+
+        # check data type
         if data_type == 'TEXT':
             if group == 'ADMINS':
                 for admin in ADMINS:
                     self.server.dispatcher.bot.send_message(admin, data)
+        else:
+            self.send_response(RequestHandler.Response.Error, 'Invalid data type')
+            return
 
         self.send_response(RequestHandler.Response.Success)
         return
