@@ -10,10 +10,26 @@ ADMINS = [110086856]
 
 
 class RequestHandler(BaseRequestHandler):
+    class StringEnum(Enum):
+        @classmethod
+        def has_value(cls, value):
+            return any(value == item.value for item in cls)
 
-    class Response(Enum):
+    class Response(StringEnum):
         Error = 'Error'
         Success = 'Success'
+
+    class Group(StringEnum):
+        Admin = 'Admin'
+
+    class Level(StringEnum):
+        Error = 'Error'
+        Warning = 'Warning'
+        Info = 'Info'
+
+    class DataType(StringEnum):
+        Test = 'Test'
+        Text = 'Text'
 
     def handle(self):
         data = self.request.recv(1024).strip().decode('utf-8')
@@ -27,9 +43,9 @@ class RequestHandler(BaseRequestHandler):
             self.send_response(RequestHandler.Response.Error, 'Invalid command structure')
             return
         sender_name, group, level, data_type, message = data.split('|', 4)
-        group = group.upper()
-        level = level.upper()
-        data_type = data_type.upper()
+        group = group.title()
+        level = level.title()
+        data_type = data_type.title()
 
         # check sender_name
         if sender_name is '':
@@ -37,28 +53,28 @@ class RequestHandler(BaseRequestHandler):
             return
 
         # check group
-        if group not in ['ADMINS']:
+        if not RequestHandler.Group.has_value(group):
             self.send_response(RequestHandler.Response.Error, 'Invalid group')
             return
 
         # check level
-        if level not in ['ERROR', 'WARNING', 'INFO']:
+        if not RequestHandler.Level.has_value(level):
             self.send_response(RequestHandler.Response.Error, 'Invalid level')
             return
 
-        # data type for testing
-        if data_type == 'TEST':
+        # check data type
+        if not RequestHandler.DataType.has_value(data_type):
+            self.send_response(RequestHandler.Response.Error, 'Invalid data type')
+            return
+
+        if RequestHandler.DataType[data_type] is RequestHandler.DataType.Test:
             self.send_response(RequestHandler.Response.Success)
             return
 
-        # check data type
-        if data_type == 'TEXT':
+        if RequestHandler.DataType[data_type] is RequestHandler.DataType.Text:
             if group == 'ADMINS':
                 for admin in ADMINS:
                     self.server.dispatcher.bot.send_message(admin, data)
-        else:
-            self.send_response(RequestHandler.Response.Error, 'Invalid data type')
-            return
 
         self.send_response(RequestHandler.Response.Success)
         return

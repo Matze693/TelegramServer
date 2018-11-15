@@ -82,17 +82,17 @@ class Tests(unittest.TestCase):
         self.assertEqual('Error', response)
 
     def test_send_invalid_level(self):
-        self.sendData('TestSender|Admins|Level|Text|Message')
+        self.sendData('TestSender|Admin|Level|Text|Message')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Error', response)
 
     def test_send_invalid_data_type(self):
-        self.sendData('TestSender|Admins|Error|DataType|Message')
+        self.sendData('TestSender|Admin|Error|DataType|Message')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Error', response)
 
     def test_send_valid_data(self):
-        self.sendData('TestSender|Admins|Error|Test|Message|')
+        self.sendData('TestSender|Admin|Error|Test|Message|')
         response, message = self.receiveData().split('|', 1)
         self.assertEqual('Success', response)
 
