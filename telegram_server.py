@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 class TelegramServer:
 
-    def __init__(self, token, host='127.0.0.1', port=9999):
+    def __init__(self, token, host='', port=9999):
         self.telegram = Telegram(token=token)
         self.server = Server(host, port, self.telegram.dispatcher)
 
