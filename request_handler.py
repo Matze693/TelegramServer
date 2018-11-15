@@ -72,7 +72,7 @@ class RequestHandler(BaseRequestHandler):
             return
 
         if RequestHandler.DataType[data_type] is RequestHandler.DataType.Text:
-            if group == 'ADMINS':
+            if RequestHandler.Group[group] is RequestHandler.Group.Admin:
                 for admin in ADMINS:
                     self.server.dispatcher.bot.send_message(admin, data)
 
