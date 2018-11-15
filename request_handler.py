@@ -6,6 +6,8 @@ from common import get_logger
 
 logger = get_logger(__name__)
 
+ADMINS = [110086856]
+
 
 class RequestHandler(BaseRequestHandler):
 
@@ -47,6 +49,13 @@ class RequestHandler(BaseRequestHandler):
         if data_type == 'TEST':
             self.send_response(RequestHandler.Response.Success)
             return
+        if data_type == 'TEXT':
+            if group == 'ADMINS':
+                for admin in ADMINS:
+                    self.server.dispatcher.bot.send_message(admin, data)
+
+        self.send_response(RequestHandler.Response.Success)
+        return
 
     def send_response(self, response, message=''):
         data = '{}|{}'.format(response.value, message)
