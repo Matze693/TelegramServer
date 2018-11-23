@@ -18,7 +18,7 @@ class ThreadTests(unittest.TestCase):
             self.message = None
 
         def run(self):
-            self.client.sendall(bytes('TestSender|Admins|Error|Test|Message', 'utf-8'))
+            self.client.sendall(bytes('TestSender|Admin|Error|Test|Message', 'utf-8'))
             response, message = self.client.recv(4096).strip().decode('utf-8').split('|', 1)
             self.response = response
             self.message = message
