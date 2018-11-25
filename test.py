@@ -102,3 +102,45 @@ class Tests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.server.stop()
+
+
+class TelegramTests(unittest.TestCase):
+
+    def sendData(self, data):
+        self.client.sendall(bytes(data, 'utf-8'))
+
+    def receiveData(self):
+        return self.client.recv(4096).strip().decode('utf-8')
+
+    @classmethod
+    def setUpClass(cls):
+        bot_config = configparser.ConfigParser()
+        bot_config.read('bot.config')
+        cls.server = TelegramServer(token=bot_config['BOT']['TOKEN'])
+        cls.server.start()
+
+    def setUp(self):
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.connect(('127.0.0.1', 9999))
+
+    def test_error(self):
+        self.sendData('TestSender|Admin|Error|Text|error test message')
+        response, message = self.receiveData().split('|', 1)
+        self.assertEqual('Success', response)
+
+    def test_warning(self):
+        self.sendData('TestSender|Admin|Warning|Text|warning test message')
+        response, message = self.receiveData().split('|', 1)
+        self.assertEqual('Success', response)
+
+    def test_info(self):
+        self.sendData('TestSender|Admin|Info|Text|info test message')
+        response, message = self.receiveData().split('|', 1)
+        self.assertEqual('Success', response)
+
+    def tearDown(self):
+        self.client.close()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.server.stop()

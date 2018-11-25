@@ -6,8 +6,6 @@ from common import get_logger
 
 logger = get_logger(__name__)
 
-ADMINS = [110086856]
-
 
 class RequestHandler(BaseRequestHandler):
     class StringEnum(Enum):
@@ -67,14 +65,12 @@ class RequestHandler(BaseRequestHandler):
             self.send_response(RequestHandler.Response.Error, 'Invalid data type')
             return
 
-        if RequestHandler.DataType[data_type] is RequestHandler.DataType.Test:
-            self.send_response(RequestHandler.Response.Success)
-            return
-
-        if RequestHandler.DataType[data_type] is RequestHandler.DataType.Text:
-            if RequestHandler.Group[group] is RequestHandler.Group.Admin:
-                for admin in ADMINS:
-                    self.server.dispatcher.bot.send_message(admin, data)
+        if RequestHandler.DataType[data_type] is not RequestHandler.DataType.Test:
+            self.send_telegram_message(sender_name,
+                                       RequestHandler.Group[group],
+                                       RequestHandler.Level[level],
+                                       RequestHandler.DataType[data_type],
+                                       message)
 
         self.send_response(RequestHandler.Response.Success)
         return
@@ -84,3 +80,18 @@ class RequestHandler(BaseRequestHandler):
         logger.info('Send message to client {}'.format(self.client_address))
         logger.info('>> "{}"'.format(data))
         self.request.sendall(bytes(data, 'utf-8'))
+
+    def send_telegram_message(self, sender_name, group, level, data_type, data):
+        for user in GROUPS[group]:
+            message = ''
+            message += '{level} {sender}\n'.format(level=LEVELS[level], sender=sender_name)
+            if data_type is RequestHandler.DataType.Text:
+                message += '{message}'.format(message=data)
+                self.server.dispatcher.bot.send_message(user, message)
+
+
+GROUPS = {RequestHandler.Group.Admin: [110086856]}
+LEVELS = {RequestHandler.Level.Error: '❌',
+          RequestHandler.Level.Warning: '⚠️',
+          RequestHandler.Level.Info: 'ℹ️'}
+
