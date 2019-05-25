@@ -1,12 +1,9 @@
 from threading import Thread
+import logging
 
 from telegram.ext import Updater
 
-# logger
-from common import get_logger
 from server import Server
-
-logger = get_logger(__name__)
 
 
 class TelegramServer:
@@ -35,10 +32,10 @@ class Telegram(Thread):
         self.dispatcher = self.updater.dispatcher
 
     def run(self):
-        logger.debug('telegram thread is running...')
+        logging.debug('telegram thread is running...')
         self.updater.start_polling(poll_interval=0.1, timeout=3)
 
     def stop(self):
-        logger.debug('telegram thread will be stopped')
+        logging.debug('telegram thread will be stopped')
         self.updater.stop()
-        logger.debug('telegram thread is killed')
+        logging.debug('telegram thread is killed')

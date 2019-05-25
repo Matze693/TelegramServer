@@ -1,10 +1,6 @@
 from enum import Enum
+import logging
 from socketserver import BaseRequestHandler
-
-# logger
-from common import get_logger
-
-logger = get_logger(__name__)
 
 
 class RequestHandler(BaseRequestHandler):
@@ -31,8 +27,8 @@ class RequestHandler(BaseRequestHandler):
 
     def handle(self):
         data = self.request.recv(1024).strip().decode('utf-8')
-        logger.info('Incoming message from client {}'.format(self.client_address))
-        logger.info('<< "{}"'.format(data))
+        logging.info('Incoming message from client {}'.format(self.client_address))
+        logging.info('<< "{}"'.format(data))
 
         # data = 'SenderName|Group|Level|DataType|Message'
 
@@ -77,8 +73,8 @@ class RequestHandler(BaseRequestHandler):
 
     def send_response(self, response, message=''):
         data = '{}|{}'.format(response.value, message)
-        logger.info('Send message to client {}'.format(self.client_address))
-        logger.info('>> "{}"'.format(data))
+        logging.info('Send message to client {}'.format(self.client_address))
+        logging.info('>> "{}"'.format(data))
         self.request.sendall(bytes(data, 'utf-8'))
 
     def send_telegram_message(self, sender_name, group, level, data_type, data):

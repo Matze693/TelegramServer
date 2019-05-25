@@ -1,18 +1,25 @@
+import logging
 import configparser
 import signal
 
-from common import get_logger
 from telegram_server import TelegramServer
 
-logger = get_logger(__name__)
+# logging
+console_logging = logging.StreamHandler()
+console_logging.setLevel(logging.WARNING)
+
+logging.basicConfig(level=logging.NOTSET,
+                    handlers=[console_logging],
+                    format='%(asctime)23s - %(levelname)8s - %(name)25s - %(funcName)25s - %(message)s'
+                    )
 
 
 def signal_handler(sig, frame):
-    logger.debug('User aborted server')
+    logging.debug('User aborted server')
 
 
 def main():
-    logger.debug('Start program')
+    logging.debug('Start program')
     signal.signal(signal.SIGINT, signal_handler)
 
     bot_config = configparser.ConfigParser()
@@ -23,7 +30,7 @@ def main():
     signal.pause()
     server.stop()
 
-    logger.debug('Exit program')
+    logging.debug('Exit program')
 
 
 if __name__ == '__main__':

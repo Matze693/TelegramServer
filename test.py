@@ -1,9 +1,20 @@
 import configparser
 import socket
+import logging
 import unittest
 from threading import Thread
 
 from telegram_server import TelegramServer
+
+
+# logging
+console_logging = logging.StreamHandler()
+console_logging.setLevel(logging.NOTSET)
+
+logging.basicConfig(level=logging.NOTSET,
+                    handlers=[console_logging],
+                    format='%(asctime)23s - %(levelname)8s - %(funcName)25s - %(message)s'
+                    )
 
 
 class ThreadTests(unittest.TestCase):

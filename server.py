@@ -1,11 +1,8 @@
 from socketserver import ThreadingTCPServer
 from threading import Thread
+import logging
 
-# logger
-from common import get_logger
 from request_handler import RequestHandler
-
-logger = get_logger(__name__)
 
 ADMIN_ID = '110086856'
 
@@ -22,11 +19,11 @@ class Server(Thread):
         self.server.dispatcher = dispatcher
 
     def run(self):
-        logger.debug('server thread is running...')
+        logging.debug('server thread is running...')
         self.server.serve_forever()
 
     def stop(self):
-        logger.debug('server thread will be stopped')
+        logging.debug('server thread will be stopped')
         self.server.shutdown()
         self.server.server_close()
-        logger.debug('server thread is killed')
+        logging.debug('server thread is killed')
